@@ -1,13 +1,17 @@
 import { STAKING_ABI } from "@config/abis";
 import { DAYS_PER_YEAR, DOLA3CRV, SECONDS_PER_DAY } from "@config/constants";
-import { InfuraProvider } from "@ethersproject/providers";
 import { Contract } from "ethers";
 import { formatEther, formatUnits } from "ethers/lib/utils";
+import { RetryProvider } from "lib/retry-provider";
 import "source-map-support";
 
 export const handler = async () => {
   try {
-    const provider = new InfuraProvider("homestead", process.env.INFURA_ID);
+    const provider = new RetryProvider(
+      5,
+      "https://cloudflare-eth.com/",
+      "homestead"
+    );
     const contract = new Contract(DOLA3CRV, STAKING_ABI, provider);
 
     const rewardRate = await contract.rewardRate();

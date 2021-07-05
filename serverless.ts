@@ -13,13 +13,13 @@ const serverlessConfiguration: AWS = {
   provider: {
     name: "aws",
     runtime: "nodejs14.x",
+    timeout: 30,
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1",
-      INFURA_ID: "",
       COINGECKO_PRICE_API: "https://api.coingecko.com/api/v3/simple/price",
     },
     lambdaHashingVersion: "20201221",

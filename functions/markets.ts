@@ -11,11 +11,11 @@ import {
   UNDERLYING,
   XINV,
 } from "@config/constants";
-import { InfuraProvider } from "@ethersproject/providers";
 import { Contract } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import "source-map-support";
 import * as fetch from "node-fetch";
+import { RetryProvider } from "lib/retry-provider";
 
 const toApy = (rate) =>
   (Math.pow((rate / ETH_MANTISSA) * BLOCKS_PER_DAY + 1, DAYS_PER_YEAR) - 1) *
@@ -23,7 +23,11 @@ const toApy = (rate) =>
 
 export const handler = async () => {
   try {
-    const provider = new InfuraProvider("homestead", process.env.INFURA_ID);
+    const provider = new RetryProvider(
+      5,
+      "https://cloudflare-eth.com/",
+      "homestead"
+    );
     const comptroller = new Contract(COMPTROLLER, COMPTROLLER_ABI, provider);
     const addresses = await comptroller.getAllMarkets();
     const contracts = addresses

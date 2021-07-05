@@ -5,14 +5,18 @@ import {
   SECONDS_PER_DAY,
   VAULT_TOKENS,
 } from "@config/constants";
-import { InfuraProvider } from "@ethersproject/providers";
 import { BigNumber, Contract } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
+import { RetryProvider } from "lib/retry-provider";
 import "source-map-support";
 
 export const handler = async () => {
   try {
-    const provider = new InfuraProvider("homestead", process.env.INFURA_ID);
+    const provider = new RetryProvider(
+      5,
+      "https://cloudflare-eth.com/",
+      "homestead"
+    );
     const harvester = new Contract(HARVESTER, HARVESTER_ABI, provider);
 
     const rates = await Promise.all(

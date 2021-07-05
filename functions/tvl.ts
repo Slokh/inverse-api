@@ -11,16 +11,20 @@ import {
   WETH,
   XINV,
 } from "@config/constants";
-import { InfuraProvider } from "@ethersproject/providers";
 import { Contract } from "ethers";
 import { formatUnits } from "ethers/lib/utils";
 import "source-map-support";
 import { STABILIZER_ABI } from "../config/abis";
 import * as fetch from "node-fetch";
+import { RetryProvider } from "lib/retry-provider";
 
 export const handler = async () => {
   try {
-    const provider = new InfuraProvider("homestead", process.env.INFURA_ID);
+    const provider = new RetryProvider(
+      5,
+      "https://cloudflare-eth.com/",
+      "homestead"
+    );
 
     const prices = await (
       await fetch(
