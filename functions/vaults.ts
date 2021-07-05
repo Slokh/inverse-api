@@ -30,19 +30,33 @@ export const handler = async () => {
     ).lastDistribution();
 
     return {
-      lastDistribution: lastDistribution.toNumber(),
-      rates: rates.reduce((res, rate, i) => {
-        res[VAULT_TOKENS[i]] =
-          parseFloat(
-            formatUnits(
-              rate.mul(DAYS_PER_YEAR * SECONDS_PER_DAY),
-              BigNumber.from(36).sub(i === 0 ? 6 : 18)
-            )
-          ) * 100;
-        return res;
-      }, {}),
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        lastDistribution: lastDistribution.toNumber(),
+        rates: rates.reduce((res, rate, i) => {
+          res[VAULT_TOKENS[i]] =
+            parseFloat(
+              formatUnits(
+                rate.mul(DAYS_PER_YEAR * SECONDS_PER_DAY),
+                BigNumber.from(36).sub(i === 0 ? 6 : 18)
+              )
+            ) * 100;
+          return res;
+        }, {}),
+      }),
     };
   } catch (err) {
-    console.error(err);
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(err),
+    };
   }
 };

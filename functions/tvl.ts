@@ -60,22 +60,36 @@ export const handler = async () => {
     );
 
     return {
-      tvl: usdVault + usdAnchor + usdStabilizer,
-      vaults: {
-        tvl: usdVault,
-        assets: vaultBalances,
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
-      anchor: {
-        tvl: usdAnchor,
-        assets: anchorBalances,
-      },
-      stabilizer: {
-        tvl: usdStabilizer,
-        assets: stabilizerBalances,
-      },
+      body: JSON.stringify({
+        tvl: usdVault + usdAnchor + usdStabilizer,
+        vaults: {
+          tvl: usdVault,
+          assets: vaultBalances,
+        },
+        anchor: {
+          tvl: usdAnchor,
+          assets: anchorBalances,
+        },
+        stabilizer: {
+          tvl: usdStabilizer,
+          assets: stabilizerBalances,
+        },
+      }),
     };
   } catch (err) {
-    console.error(err);
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(err),
+    };
   }
 };
 

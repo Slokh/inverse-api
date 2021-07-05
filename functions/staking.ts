@@ -18,17 +18,31 @@ export const handler = async () => {
     const totalSupply = await contract.totalSupply();
 
     return {
-      rates: {
-        [DOLA3CRV]: totalSupply.gt(0)
-          ? (parseFloat(
-              formatEther(rewardRate.mul(SECONDS_PER_DAY * DAYS_PER_YEAR))
-            ) /
-              parseFloat(formatUnits(totalSupply))) *
-            100
-          : 0,
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
       },
+      body: JSON.stringify({
+        rates: {
+          [DOLA3CRV]: totalSupply.gt(0)
+            ? (parseFloat(
+                formatEther(rewardRate.mul(SECONDS_PER_DAY * DAYS_PER_YEAR))
+              ) /
+                parseFloat(formatUnits(totalSupply))) *
+              100
+            : 0,
+        },
+      }),
     };
   } catch (err) {
-    console.error(err);
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(err),
+    };
   }
 };

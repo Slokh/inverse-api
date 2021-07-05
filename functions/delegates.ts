@@ -22,11 +22,25 @@ export const handler = async () => {
     }
 
     return {
-      blockNumber: data.Item.blockNumber,
-      timestamp: data.Item.timestamp,
-      delegates: data.Item.data,
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify({
+        blockNumber: data.Item.blockNumber,
+        timestamp: data.Item.timestamp,
+        delegates: data.Item.data,
+      }),
     };
   } catch (err) {
-    console.error(err);
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Credentials": true,
+      },
+      body: JSON.stringify(err),
+    };
   }
 };
